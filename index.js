@@ -16,9 +16,10 @@ async function run() {
 		repo,
 		pull_number: pull_request.number,
 		mediaType: {
-			format: 'patch'
+			format: 'diff'
 		}
 	});
+  core.info(pullRequest.changed_files);
 	core.info(JSON.stringify(pullRequest));
 }
 

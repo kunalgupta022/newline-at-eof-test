@@ -11,3 +11,5 @@ jobs:
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}

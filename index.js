@@ -2,59 +2,25 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const env = process.env;
 
-function setBuildVersion(buildVersion) {
-	core.setOutput('NEXT_BUILD_VERSION', buildVersion);
-}
-
-async function listAllTags(octokit, owner, repo) {
-	var page = 1;
-	var tags = [];
-	while (true) {
-		const response = await octokit.repos.listTags({
-			owner,
-			repo,
-			per_page: 100,
-			page: page
-		});
-		const newTags = response['data'].map((obj) => obj['name']);
-
-		if (!newTags.length) {
-			break;
-		}
-		tags.push(...newTags);
-		page++;
-	}
-	return tags;
-}
-
 async function run() {
 	const token = core.getInput('GH_TOKEN');
-	var tagPrefix = core.getInput('TAG_PREFIX');
-	if (!tagPrefix) {
-		tagPrefix = 'v';
-	}
-	const octokit = new github.GitHub(token);
+
+	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
 	const { pull_request } = context.payload;
 
 	const owner = env.GITHUB_REPOSITORY.split('/')[0];
 	const repo = env.GITHUB_REPOSITORY.split('/')[1];
-	const commit = octokit.rest.pulls.get({
+	const { data: pullRequest } = await octokit.pulls.get({
 		owner,
 		repo,
-		issue_number: pull_request.number
+		pull_number: pull_request.number,
+		mediaType: {
+			format: 'diff'
+		}
 	});
-	core.info(JSON.stringify(commit));
-	const versionTagRegex = new RegExp(`^${tagPrefix}(\\d+)\\.(\\d+)\\.(\\d+)$`);
-
-	const allTags = await listAllTags(octokit, owner, repo);
-	const tags = allTags.filter((el) => el.match(versionTagRegex));
-
-	if (tags.length < 1) {
-		setBuildVersion('0.0.1');
-		return;
-	}
-	core.error(JSON.stringify(tags));
+  core.info(pullRequest.changed_files);
+	core.info(JSON.stringify(pullRequest));
 }
 
 run();

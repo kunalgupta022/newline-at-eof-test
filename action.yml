@@ -5,10 +5,6 @@ inputs:
   GH_TOKEN:
     description: GitHub Token used to interact with GitHub API
     required: true
-  TAG_PREFIX:
-    description: Prefix to look for in version tags
-    required: true
-    default: v
 outputs:
   NEXT_BUILD_VERSION:
     description: Next build number to use

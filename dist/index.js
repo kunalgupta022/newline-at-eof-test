@@ -44,6 +44,7 @@ async function listAllTags(octokit, owner, repo) {
 
 async function run() {
 	const token = core.getInput('GH_TOKEN');
+  core.error(JSON.stringify(token));
 	var tagPrefix = core.getInput('TAG_PREFIX');
 	if (!tagPrefix) {
 		tagPrefix = 'v';
@@ -70,6 +71,40 @@ async function run() {
 		return;
 	}
 	core.error(JSON.stringify(tags));
+
+	tags.sort((l, r) => {
+		const lx = parseInt(l.split('.')[0]);
+		const rx = parseInt(r.split('.')[0]);
+		if (lx < rx) {
+			return 1;
+		}
+		if (rx < lx) {
+			return -1;
+		}
+		const ly = parseInt(l.split('.')[1]);
+		const ry = parseInt(r.split('.')[1]);
+		if (ly < ry) {
+			return 1;
+		}
+		if (ry < ly) {
+			return -1;
+		}
+		const lz = parseInt(l.split('.')[2]);
+		const rz = parseInt(r.split('.')[2]);
+		if (lz < rz) {
+			return 1;
+		}
+		if (rz < lz) {
+			return -1;
+		}
+		return 0;
+	});
+	const split = tags[0].substring(tagPrefix.length).split('.');
+	const nextX = parseInt(split[0]);
+	const nextY = parseInt(split[1]);
+	const nextZ = parseInt(split[2]) + 1;
+
+	setBuildVersion(`${nextX}.${nextY}.${nextZ}`);
 }
 
 run();

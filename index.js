@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const gitDiffParser = require('gitdiff-parser');
 const env = process.env;
 
 async function run() {
@@ -20,6 +21,7 @@ async function run() {
 		}
 	});
 	core.info(JSON.stringify(pullRequest));
+  gitDiffParser.parse(pullRequest);
 }
 
 run();

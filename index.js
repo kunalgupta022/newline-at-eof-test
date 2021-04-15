@@ -40,7 +40,7 @@ async function run() {
 
 	const owner = env.GITHUB_REPOSITORY.split('/')[0];
 	const repo = env.GITHUB_REPOSITORY.split('/')[1];
-	const commit = octokit.pull_request.get({
+	const commit = await octokit.pull_request({
 		owner,
 		repo,
 		issue_number: pull_request.number

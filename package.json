@@ -1,0 +1,21 @@
+{
+  "name": "determine-next-version",
+  "version": "1.0.0",
+  "description": "A GitHub Action that parses git tags that start with v and determines the next version",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gps/determine-next-version.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/gps/determine-next-version/issues"
+  },
+  "homepage": "https://github.com/gps/determine-next-version#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^2.2.0"
+  }
+}

@@ -1,0 +1,10 @@
+name: 'Newline at EOF'
+description: 'Parses Git Tags that start with v and determines the next version'
+author: 'Gopal Sharma <gps@surya-soft.com>'
+inputs:
+  GH_TOKEN:
+    description: GitHub Token used to interact with GitHub API
+    required: true
+runs:
+  using: node12
+  main: 'dist/index.js'

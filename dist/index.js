@@ -26,7 +26,6 @@ async function run() {
 			format: 'diff'
 		}
 	});
-  core.info(pullRequest.changed_files);
 	core.info(JSON.stringify(pullRequest));
 }
 

@@ -1,5 +1,5 @@
 name: Build Package to use ncc
-on: 
+on:
   pull_request:
     types: [opened]
 

@@ -44,7 +44,7 @@ async function listAllTags(octokit, owner, repo) {
 
 async function run() {
 	const token = core.getInput('GH_TOKEN');
-  core.error(JSON.stringify(token));
+  core.error("Testing "+JSON.stringify(token));
 	var tagPrefix = core.getInput('TAG_PREFIX');
 	if (!tagPrefix) {
 		tagPrefix = 'v';
@@ -55,7 +55,7 @@ async function run() {
 
 	const owner = env.GITHUB_REPOSITORY.split('/')[0];
 	const repo = env.GITHUB_REPOSITORY.split('/')[1];
-	const commit = octokit.rest.pulls.get({
+	const commit = octokit.rest.pull_request.get({
 		owner,
 		repo,
 		issue_number: pull_request.number

@@ -1,7 +1,5 @@
 name: Build Package to use ncc
-on:
-  pull_request:
-    types: [opened]
+on: [pull_request]
 
 jobs:
   build-package:

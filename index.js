@@ -20,8 +20,8 @@ async function run() {
 			format: 'diff'
 		}
 	});
-	core.info(JSON.stringify(pullRequest));
-	const parsedDiff = gitDiffParser.parse(pullRequesDifft);
+	core.info(JSON.stringify(pullRequestDiff));
+	const parsedDiff = gitDiffParser.parse(pullRequestDiff);
   core.info(JSON.stringify(parsedDiff));
 	const changedFilePaths = parsedDiff.map((e) => {
     return e['newPath']

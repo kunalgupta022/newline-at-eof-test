@@ -8,6 +8,7 @@ module.exports =
 const core = __nccwpck_require__(186);
 const github = __nccwpck_require__(438);
 const gitDiffParser = __nccwpck_require__(153);
+const fs = __nccwpck_require__(747);
 const env = process.env;
 
 async function run() {
@@ -34,6 +35,15 @@ async function run() {
     return e['newPath']
   });
   core.info(JSON.stringify(changedFilePaths));
+
+  for(var i=0;i < changedFilePaths.lenght; i++){
+    try {
+			var data = fs.readFileSync(changedFilePaths[i], 'utf8');
+			core.info(data);
+		} catch (e) {
+			core.error('Error:', e.stack);
+		}
+  }
 
 }
 

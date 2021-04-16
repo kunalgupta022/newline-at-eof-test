@@ -52,14 +52,16 @@ async function run() {
 		}
 		return e;
 	});
-	core.info(JSON.stringify(changedFilePaths));
+	core.info(JSON.stringify(filesToCheck));
 
 	for (var i = 0; i < filesToCheck.lenght; i++) {
 		try {
-			if (filesToCheck[i] !== null) {
-				var data = fs.readFileSync(filesToCheck[i], 'utf8');
-				core.info(data);
-			}
+      var data = fs.readFileSync(filesToCheck[i], 'utf8');
+			core.info(data);
+			// if (filesToCheck[i] !== null) {
+			// 	var data = fs.readFileSync(filesToCheck[i], 'utf8');
+			// 	core.info(data);
+			// }
 		} catch (e) {
 			core.error('Error:', e.stack);
 		}

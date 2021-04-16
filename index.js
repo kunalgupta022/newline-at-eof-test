@@ -42,9 +42,10 @@ async function run() {
 			if (matchExact(ignorePaths[i], e)) {
 				return null;
 			}
-			return e;
 		}
+		return e;
 	});
+	core.info(JSON.stringify(changedFilePaths));
 
 	for (var i = 0; i < filesToCheck.lenght; i++) {
 		try {

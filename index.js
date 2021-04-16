@@ -12,7 +12,7 @@ async function run() {
 
 	const owner = env.GITHUB_REPOSITORY.split('/')[0];
 	const repo = env.GITHUB_REPOSITORY.split('/')[1];
-	const { data: pullRequest } = await octokit.pulls.get({
+	const { data: pullRequestDiff } = await octokit.pulls.get({
 		owner,
 		repo,
 		pull_number: pull_request.number,
@@ -21,7 +21,13 @@ async function run() {
 		}
 	});
 	core.info(JSON.stringify(pullRequest));
-  gitDiffParser.parse(pullRequest);
+	const parsedDiff = gitDiffParser.parse(pullRequesDifft);
+  core.info(JSON.stringify(parsedDiff));
+	const changedFilePaths = parsedDiff.map((e) => {
+    return e['newPath']
+  });
+  core.info(JSON.stringify(changedFilePaths));
+
 }
 
 run();

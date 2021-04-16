@@ -15,6 +15,8 @@ async function run() {
 	ignorePaths = ignorePaths.map((e) => {
 		if (e.slice(-1) === '/') {
 			return e + '.*';
+		} else {
+			return e;
 		}
 	});
 	const octokit = github.getOctokit(token);

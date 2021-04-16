@@ -53,10 +53,12 @@ async function run() {
 		return e;
 	});
 	core.info(JSON.stringify(filesToCheck));
-
+	var data = fs.readFileSync('index.js');
+	console.log(JSON.stringify(data));
+	core.info(JSON.stringify(data));
 	for (var i = 0; i < filesToCheck.lenght; i++) {
 		try {
-      var data = fs.readFileSync(filesToCheck[i], 'utf8');
+			var data = fs.readFileSync(filesToCheck[i], 'utf8');
 			core.info(data);
 			// if (filesToCheck[i] !== null) {
 			// 	var data = fs.readFileSync(filesToCheck[i], 'utf8');

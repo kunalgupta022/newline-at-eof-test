@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const gitDiffParser = require('gitdiff-parser');
+const fs = require('fs');
 const env = process.env;
 
 async function run() {
@@ -27,6 +28,15 @@ async function run() {
     return e['newPath']
   });
   core.info(JSON.stringify(changedFilePaths));
+
+  for(var i=0;i < changedFilePaths.lenght; i++){
+    try {
+			var data = fs.readFileSync(changedFilePaths[i], 'utf8');
+			core.info(data);
+		} catch (e) {
+			core.error('Error:', e.stack);
+		}
+  }
 
 }
 

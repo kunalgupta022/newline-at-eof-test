@@ -17,6 +17,7 @@
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@actions/github": "^4.0.0",
+    "fs": "^0.0.1-security",
     "gitdiff-parser": "^0.2.2"
   }
 }

@@ -4,9 +4,19 @@ const gitDiffParser = require('gitdiff-parser');
 const fs = require('fs');
 const env = process.env;
 
+function matchExact(r, str) {
+	var match = str.match(r);
+	return match && str === match[0];
+}
+
 async function run() {
 	const token = core.getInput('GH_TOKEN');
-
+	var ignorePaths = ['dist/', 'package-lock.json'];
+	ignorePaths = ignorePaths.map((e) => {
+		if (e.slice(-1) === '/') {
+			return e + '.*';
+		}
+	});
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
 	const { pull_request } = context.payload;
@@ -21,23 +31,31 @@ async function run() {
 			format: 'diff'
 		}
 	});
-	core.info(JSON.stringify(pullRequestDiff));
 	const parsedDiff = gitDiffParser.parse(pullRequestDiff);
-  core.info(JSON.stringify(parsedDiff));
 	const changedFilePaths = parsedDiff.map((e) => {
-    return e['newPath']
-  });
-  core.info(JSON.stringify(changedFilePaths));
+		return e['newPath'];
+	});
+	core.info(JSON.stringify(changedFilePaths));
 
-  for(var i=0;i < changedFilePaths.lenght; i++){
-    try {
-			var data = fs.readFileSync(changedFilePaths[i], 'utf8');
-			core.info(data);
+	var filesToCheck = changedFilePaths.map((e) => {
+		for (var i = 0; i < ignorePaths.length; i++) {
+			if (matchExact(ignorePaths[i], e)) {
+				return null;
+			}
+			return e;
+		}
+	});
+
+	for (var i = 0; i < filesToCheck.lenght; i++) {
+		try {
+			if (filesToCheck[i] !== null) {
+				var data = fs.readFileSync(filesToCheck[i], 'utf8');
+				core.info(data);
+			}
 		} catch (e) {
 			core.error('Error:', e.stack);
 		}
-  }
-
+	}
 }
 
 run();

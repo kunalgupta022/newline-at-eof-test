@@ -74,8 +74,6 @@ async function run() {
 
 	const git = simpleGit();
 
-	await git.checkout(branch, ['-f']);
-
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
 	const { pull_request } = context.payload;
@@ -128,7 +126,7 @@ async function run() {
 				`${env.GITHUB_ACTOR}@users.noreply.github.com`
 			);
 			await git.addConfig('user.name', env.GITHUB_ACTOR);
-			await git.add('./');
+			await git.add('.');
 			await git.commit('Fixed Trailing Whitespaces and EOF Newline');
 			await git.push('repo', branch);
 		});

@@ -4,6 +4,9 @@ on: [pull_request]
 jobs:
   build-package:
     runs-on: ubuntu-latest
+    env:
+      IGNORE_PATHS_STRING: 'build/.* package-lock.json'
+
     steps:
       - uses: actions/checkout@v2
       - name: Build node js module
@@ -13,7 +16,9 @@ jobs:
       - uses: ./
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PATHS: "build/.* package-lock.jsonn"
+          IGNORE_PATHS: ${{ env.IGNORE_PATHS_STRING }}
 
 
 
+
+          

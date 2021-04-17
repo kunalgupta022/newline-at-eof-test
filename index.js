@@ -53,13 +53,13 @@ async function run() {
 	const token = core.getInput('GH_TOKEN');
 	let ignorePaths = core.getInput('IGNORE_PATHS');
 	ignorePaths = ignorePaths.split(' ');
-	// ignorePaths = ignorePaths.map((e) => {
-	// 	if (e.slice(-1) === '/') {
-	// 		return e + '.*';
-	// 	} else {
-	// 		return e;
-	// 	}
-	// });
+	ignorePaths = ignorePaths.map((e) => {
+		if (e.slice(-1) === '/') {
+			return e + '.*';
+		} else {
+			return e;
+		}
+	});
 
 	const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(
 		/^https:\/\//,
@@ -74,7 +74,7 @@ async function run() {
 
 	const git = simpleGit();
 
-	// await git.checkout(branch, ['-f']);
+	await git.checkout(branch, ['-f']);
 
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;

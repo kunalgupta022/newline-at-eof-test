@@ -14,7 +14,7 @@ const simpleGit = __nccwpck_require__(1477);
 const env = process.env;
 
 function matchExact(r, str) {
-	var match = str.match(r);
+	let match = str.match(r);
 	return match && str === match[0];
 }
 
@@ -58,20 +58,21 @@ async function getChangedFilesPaths(pull_request, octokit, owner, repo) {
 
 async function run() {
 	const token = core.getInput('GH_TOKEN');
-	var ignorePaths = ['dist/', 'package-lock.json'];
-	ignorePaths = ignorePaths.map((e) => {
-		if (e.slice(-1) === '/') {
-			return e + '.*';
-		} else {
-			return e;
-		}
-	});
+	let ignorePaths = core.getInput('IGNORE_PATHS');
+	ignorePaths = ignorePaths.split(' ');
+	// ignorePaths = ignorePaths.map((e) => {
+	// 	if (e.slice(-1) === '/') {
+	// 		return e + '.*';
+	// 	} else {
+	// 		return e;
+	// 	}
+	// });
 
 	const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(
 		/^https:\/\//,
 		`https://x-access-token:${token}@`
 	);
-	var branch;
+	let branch;
 	if (github.context.eventName == 'pull_request') {
 		branch = github.context.payload.pull_request.head.ref;
 	} else {
@@ -100,7 +101,7 @@ async function run() {
 
 	// Removec files matching ignore paths regex
 	let filesToCheck = changedFilePaths.map((e) => {
-		for (var i = 0; i < ignorePaths.length; i++) {
+		for (let i = 0; i < ignorePaths.length; i++) {
 			if (matchExact(ignorePaths[i], e)) {
 				return null;
 			}
@@ -109,7 +110,7 @@ async function run() {
 	});
 
 	// Perform EOF newline check
-	for (var i = 0; i < filesToCheck.length; i++) {
+	for (let i = 0; i < filesToCheck.length; i++) {
 		if (filesToCheck[i] !== null) {
 			let data = fs.readFileSync(filesToCheck[i], {
 				encoding: 'utf8',

@@ -13,3 +13,4 @@ jobs:
       - uses: ./
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORE_PATHS: "build/.* package-lock.jsonn"

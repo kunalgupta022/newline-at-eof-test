@@ -56,7 +56,7 @@ async function run() {
 	// await git.addRemote('repo', url);
 	// await git.fetch('repo');
 	try {
-		await git.checkout(branch,['-f']);
+		let a = await git.checkout(branch,['-f']);
 	} catch (e) {
 		// console.log(e.stack);
 		throw new Error('Checkout failed');

@@ -52,13 +52,14 @@ async function run() {
 			format: 'diff'
 		}
 	});
+  core.info(pullRequestDiff);
 	const parsedDiff = gitDiffParser(pullRequestDiff);
 
 	const changedFilePaths = parsedDiff.map((e) => {
 		return e['newPath'];
 	});
 
-	core.info(JSON.stringify(changedFilePaths));
+	core.info('changedFilePaths ' + JSON.stringify(changedFilePaths));
 
 	let filesToCheck = changedFilePaths.map((e) => {
 		for (var i = 0; i < ignorePaths.length; i++) {

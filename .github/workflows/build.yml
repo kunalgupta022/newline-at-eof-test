@@ -5,7 +5,7 @@ jobs:
   build-package:
     runs-on: ubuntu-latest
     env:
-      IGNORE_PATHS_STRING: 'build/.* package-lock.json'
+      IGNORE_PATHS_STRING: ${{ 'build/.* package-lock.json' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -17,8 +17,3 @@ jobs:
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PATHS: ${{ env.IGNORE_PATHS_STRING }}
-
-
-
-
-          

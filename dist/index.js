@@ -62,12 +62,12 @@ async function run() {
 	const git = simpleGit();
 	// await git.addRemote('repo', url);
 	// await git.fetch('repo');
-  try{
-	await git.checkout(branch);
-  }catch(e){
-    // console.log(e.stack);
-    throw new Error("Checkout failed")
-  }
+	try {
+		await git.checkout(branch,['-f']);
+	} catch (e) {
+		// console.log(e.stack);
+		throw new Error('Checkout failed');
+	}
 
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;

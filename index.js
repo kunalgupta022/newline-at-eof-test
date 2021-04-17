@@ -53,14 +53,7 @@ async function run() {
 	}
 
 	const git = simpleGit();
-	// await git.addRemote('repo', url);
-	// await git.fetch('repo');
-	try {
-		let a = await git.checkout(branch, ['-f']);
-	} catch (e) {
-		// console.log(e.stack);
-		throw new Error('Checkout failed');
-	}
+  let a = await git.checkout(branch);
 
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
@@ -94,18 +87,14 @@ async function run() {
 		return e;
 	});
 
-	core.info(JSON.stringify(filesToCheck));
-
 	for (var i = 0; i < filesToCheck.length; i++) {
 		if (filesToCheck[i] !== null) {
 			let data = fs.readFileSync(filesToCheck[i], {
 				encoding: 'utf8',
 				flag: 'r'
 			});
-			// core.info(data);
 			data = stripTrailingSpaces(data);
 			fs.writeFileSync(filesToCheck[i], data, 'utf8');
-			// core.info(data);
 		}
 	}
 

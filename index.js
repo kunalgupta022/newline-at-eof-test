@@ -102,6 +102,8 @@ async function run() {
 		return e;
 	});
 
+  core.info('filesToCheck ' + JSON.stringify(filesToCheck));
+
 	// Perform EOF newline check
 	for (let i = 0; i < filesToCheck.length; i++) {
 		if (filesToCheck[i] !== null) {

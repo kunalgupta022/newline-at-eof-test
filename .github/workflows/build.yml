@@ -4,8 +4,6 @@ on: [pull_request]
 jobs:
   build-package:
     runs-on: ubuntu-latest
-    env:
-      IGNORE_PATHS_STRING: ${{ 'dist/.* package-lock.json' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -16,4 +14,4 @@ jobs:
       - uses: ./
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PATHS: ${{ env.IGNORE_PATHS_STRING }}
+          IGNORE_PATHS: ${{ 'dist/.* package-lock.json' }}

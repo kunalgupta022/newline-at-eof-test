@@ -57,7 +57,7 @@ async function getChangedFilesPaths(pull_request, octokit, owner, repo) {
 }
 
 async function run() {
-	const token = core.getInput('TOKEN');
+	const token = core.getInput('GH_TOKEN');
 	let ignorePaths = core.getInput('IGNORE_PATHS');
 	ignorePaths = ignorePaths.split(' ');
 	// ignorePaths = ignorePaths.map((e) => {
@@ -81,7 +81,7 @@ async function run() {
 
 	const git = simpleGit();
 
-	await git.checkout(branch, ['-f']);
+	// await git.checkout(branch, ['-f']);
 
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;

@@ -11,7 +11,7 @@ function matchExact(r, str) {
 	return match && str === match[0];
 }
 
-function stripTrailingSpaces(b) {
+function fixNewLineEOF(b) {
 	// If file is empty
 	if (b.length < 1) {
 		return b;
@@ -108,7 +108,7 @@ async function run() {
 				encoding: 'utf8',
 				flag: 'r'
 			});
-			data = stripTrailingSpaces(data);
+			data = fixNewLineEOF(data);
 			fs.writeFileSync(filesToCheck[i], data, 'utf8');
 		}
 	}

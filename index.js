@@ -60,6 +60,8 @@ async function run() {
 			return e;
 		}
 	});
+  
+  core.log('ignorePaths'+JSON.stringify(ignorePaths));
 
 	const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(
 		/^https:\/\//,

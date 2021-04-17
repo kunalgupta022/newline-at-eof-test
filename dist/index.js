@@ -83,8 +83,6 @@ async function run() {
 
 	const git = simpleGit();
 
-	await git.checkout(branch, ['-f']);
-
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
 	const { pull_request } = context.payload;

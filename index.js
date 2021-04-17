@@ -60,8 +60,8 @@ async function run() {
 			return e;
 		}
 	});
-  
-  core.log('ignorePaths'+JSON.stringify(ignorePaths));
+
+	core.info('ignorePaths' + JSON.stringify(ignorePaths));
 
 	const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(
 		/^https:\/\//,
@@ -104,7 +104,7 @@ async function run() {
 		return e;
 	});
 
-  core.info('filesToCheck ' + JSON.stringify(filesToCheck));
+	core.info('filesToCheck ' + JSON.stringify(filesToCheck));
 
 	// Perform EOF newline check
 	for (let i = 0; i < filesToCheck.length; i++) {

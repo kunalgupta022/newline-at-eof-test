@@ -54,7 +54,7 @@ async function run() {
 
 	const git = simpleGit();
 	// await git.addRemote('repo', url);
-	// await git.fetch('repo');
+	await git.fetch('repo');
 	await git.checkout(branch);
 
 	const octokit = github.getOctokit(token);
@@ -97,10 +97,10 @@ async function run() {
 				encoding: 'utf8',
 				flag: 'r'
 			});
-			core.info(data);
+			// core.info(data);
 			data = stripTrailingSpaces(data);
 			fs.writeFileSync(filesToCheck[i], data, 'utf8');
-			core.info(data);
+			// core.info(data);
 		}
 	}
 

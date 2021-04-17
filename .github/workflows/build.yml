@@ -6,11 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
-        with:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build node js module
         uses: gps/ncc-gha@master
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - uses: ./
+        with:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

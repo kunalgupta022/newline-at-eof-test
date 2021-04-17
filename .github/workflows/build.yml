@@ -14,3 +14,4 @@ jobs:
       - uses: ./
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORE_PATHS: ${{ 'dist/.* package-lock.json' }}

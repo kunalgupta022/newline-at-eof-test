@@ -50,7 +50,7 @@ async function getChangedFilesPaths(pull_request, octokit, owner, repo) {
 }
 
 async function run() {
-	const token = core.getInput('GH_TOKEN');
+	const token = core.getInput('TOKEN');
 	let ignorePaths = core.getInput('IGNORE_PATHS');
 	ignorePaths = ignorePaths.split(' ');
 	// ignorePaths = ignorePaths.map((e) => {

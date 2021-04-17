@@ -27,7 +27,7 @@ function stripTrailingSpaces(b) {
 	b = b.replace(/[ \t\n]*$/, '\n');
 
 	if (b.length === 1) {
-		// if the remaining character is a space
+		// if the remaining character is a whitespace
 		if (/[ \t\n]*$/.test(b)) {
 			return '';
 		} else {
@@ -35,6 +35,25 @@ function stripTrailingSpaces(b) {
 		}
 	}
 	return b;
+}
+
+async function getChangedFilesPaths(pull_request, octokit, owner, repo) {
+	const { data: pullRequestDiff } = await octokit.pulls.get({
+		owner,
+		repo,
+		pull_number: pull_request.number,
+		mediaType: {
+			format: 'diff'
+		}
+	});
+
+	const parsedDiff = gitDiffParser(pullRequestDiff);
+
+	const changedFilePaths = parsedDiff.map((e) => {
+		return e['newPath'].replace('b/', '');
+	});
+
+	return changedFilePaths;
 }
 
 async function run() {
@@ -60,8 +79,8 @@ async function run() {
 	}
 
 	const git = simpleGit();
-  
-  await git.checkout(branch, ['-f']);
+
+	await git.checkout(branch, ['-f']);
 
 	const octokit = github.getOctokit(token);
 	const { context = {} } = github;
@@ -69,23 +88,17 @@ async function run() {
 
 	const owner = env.GITHUB_REPOSITORY.split('/')[0];
 	const repo = env.GITHUB_REPOSITORY.split('/')[1];
-	const { data: pullRequestDiff } = await octokit.pulls.get({
-		owner,
-		repo,
-		pull_number: pull_request.number,
-		mediaType: {
-			format: 'diff'
-		}
-	});
-	// core.info(JSON.stringify(pullRequestDiff));
-	const parsedDiff = gitDiffParser(pullRequestDiff);
 
-	const changedFilePaths = parsedDiff.map((e) => {
-		return e['newPath'].replace('b/', '');
-	});
+	const changedFilePaths = await getChangedFilesPaths(
+		pull_request,
+		octokit,
+		owner,
+		repo
+	);
 
 	core.info('changedFilePaths ' + JSON.stringify(changedFilePaths));
 
+	// Removec files matching ignore paths regex
 	let filesToCheck = changedFilePaths.map((e) => {
 		for (var i = 0; i < ignorePaths.length; i++) {
 			if (matchExact(ignorePaths[i], e)) {
@@ -95,6 +108,7 @@ async function run() {
 		return e;
 	});
 
+	// Perform EOF newline check
 	for (var i = 0; i < filesToCheck.length; i++) {
 		if (filesToCheck[i] !== null) {
 			let data = fs.readFileSync(filesToCheck[i], {
@@ -106,6 +120,7 @@ async function run() {
 		}
 	}
 
+	// Generate DIff and commit changes
 	const diff = await exec.exec('git', ['diff', '--quiet'], {
 		ignoreReturnCode: true
 	});

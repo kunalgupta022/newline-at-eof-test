@@ -56,7 +56,7 @@ async function run() {
 	// await git.addRemote('repo', url);
 	// await git.fetch('repo');
 	try {
-		let a = await git.checkout(branch,['-f']);
+		let a = await git.checkout(branch, ['-f']);
 	} catch (e) {
 		// console.log(e.stack);
 		throw new Error('Checkout failed');
@@ -76,7 +76,7 @@ async function run() {
 			format: 'diff'
 		}
 	});
-	core.info(JSON.stringify(pullRequestDiff));
+	// core.info(JSON.stringify(pullRequestDiff));
 	const parsedDiff = gitDiffParser(pullRequestDiff);
 
 	const changedFilePaths = parsedDiff.map((e) => {
@@ -112,6 +112,8 @@ async function run() {
 	const diff = await exec.exec('git', ['diff', '--quiet'], {
 		ignoreReturnCode: true
 	});
+
+	core.info(JSON.stringify(diff));
 
 	if (diff) {
 		await core.group('push changes', async () => {

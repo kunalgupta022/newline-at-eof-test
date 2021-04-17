@@ -60,7 +60,7 @@ async function run() {
 	}
 
 	const git = simpleGit();
-	// await git.addRemote('repo', url);
+	await git.addRemote('repo', url);
 	await git.fetch('repo');
 	await git.checkout(branch);
 

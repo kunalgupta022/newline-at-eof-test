@@ -1,12 +1,40 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const gitDiffParser = require('gitdiff-parser');
+const {parse: gitDiffParser} = require('what-the-diff');
 const fs = require('fs');
 const env = process.env;
 
 function matchExact(r, str) {
 	var match = str.match(r);
 	return match && str === match[0];
+}
+
+function endOfFileRule(b) {
+
+	// for empty files
+	if(b.length < 1 ){
+		return true
+	}
+  var valid = false;
+	if (b.length >= 1) {
+		valid = /[^\n]\n\z/.test(b)
+	} else {
+		valid = /\n\z/.test(b)
+	}
+
+	if(valid){
+		return valid
+	}
+
+	// add one new line to the end of file
+	fix = RegExp("(.)\z").ReplaceAll(b, []byte("$1\n"))
+
+	if rule.SingleNewLine {
+		// rm extra new lines, if any
+		fix = regexp.MustCompile(`\n+\z`).ReplaceAll(fix, []byte{'\n'})
+	}
+
+	return valid, fix
 }
 
 async function run() {
@@ -33,7 +61,7 @@ async function run() {
 			format: 'diff'
 		}
 	});
-	const parsedDiff = gitDiffParser.parse(pullRequestDiff);
+	const parsedDiff = gitDiffParser(pullRequestDiff);
 	const changedFilePaths = parsedDiff.map((e) => {
 		return e['newPath'];
 	});
@@ -48,10 +76,10 @@ async function run() {
 		return e;
 	});
 	core.info(JSON.stringify(filesToCheck));
-	var data = fs.readFileSync('index.js');
+	var data = fs.readFileSync('index.js', "utf8");
 	console.log(JSON.stringify(data));
 	core.info(JSON.stringify(data));
-	for (var i = 0; i < filesToCheck.lenght; i++) {
+	for (var i = 0; i < filesToCheck.length; i++) {
 		try {
 			var data = fs.readFileSync(filesToCheck[i], 'utf8');
 			core.info(data);

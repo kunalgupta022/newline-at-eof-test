@@ -56,7 +56,7 @@ async function run() {
 	const parsedDiff = gitDiffParser(pullRequestDiff);
 
 	const changedFilePaths = parsedDiff.map((e) => {
-		return e['newPath'].replace('b/');
+		return e['newPath'].replace('b/','');
 	});
 
 	core.info('changedFilePaths ' + JSON.stringify(changedFilePaths));

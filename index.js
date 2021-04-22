@@ -104,14 +104,15 @@ async function run() {
   // Perform EOF newline check
   for (let i = 0; i < filesToCheck.length; i++) {
     if (filesToCheck[i] !== null) {
-      let data = fs.readFileSync(filesToCheck[i], {
+      const data = fs.readFileSync(filesToCheck[i], {
         encoding: 'utf8',
         flag: 'r'
       });
-      fixedData = fixNewLineEOF(data);
+      core.log(filesToCheck[i]);
+      const fixedData = fixNewLineEOF(data);
       if (data !== fixedData) {
         filesToCommit.push(filesToCheck[i]);
-        core.log(filesToCommit)
+        core.log(filesToCommit);
         fs.writeFileSync(filesToCheck[i], fixedData, 'utf8');
       }
     }

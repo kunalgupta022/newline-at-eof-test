@@ -99,7 +99,7 @@ async function run() {
 
   // Store modified files
 
-  let filesToCommit = [];
+  const filesToCommit = [];
 
   // Perform EOF newline check
   for (let i = 0; i < filesToCheck.length; i++) {
@@ -111,8 +111,9 @@ async function run() {
       fixedData = fixNewLineEOF(data);
       if (data !== fixedData) {
         filesToCommit.push(filesToCheck[i]);
+        core.log(filesToCommit)
+        fs.writeFileSync(filesToCheck[i], fixedData, 'utf8');
       }
-      fs.writeFileSync(filesToCheck[i], fixedData, 'utf8');
     }
   }
 

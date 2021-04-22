@@ -117,6 +117,10 @@ async function run() {
       });
       core.info(filesToCheck[i]);
       const fixedData = fixNewLineEOF(data);
+      if (filesToCheck[i] === "package.json"){
+        core.info(fixedData);
+        core.info(data);
+      }
       if (data !== fixedData) {
         filesToCommit.push(filesToCheck[i]);
         core.info(filesToCommit);
@@ -153,10 +157,6 @@ async function run() {
 
 run();
 
-
-
-
-     
 
 /***/ }),
 

@@ -14,136 +14,139 @@ const simpleGit = __nccwpck_require__(1477);
 const env = process.env;
 
 function matchExact(r, str) {
-	let match = str.match(r);
-	return match && str === match[0];
+  let match = str.match(r);
+  return match && str === match[0];
 }
 
 function fixNewLineEOF(b) {
-	// If file is empty
-	if (b.length < 1) {
-		return b;
-	}
-	// If file is not empty
-	b = b.replace(/[ \t\n]*$/, '\n');
+  // If file is empty
+  if (b.length < 1) {
+    return b;
+  }
+  // If file is not empty
+  b = b.replace(/[ \t\n]*$/, '\n');
 
-	if (b.length === 1) {
-		// if the remaining character is a whitespace
-		if (/[ \t\n]*$/.test(b)) {
-			return '';
-		} else {
-			return b + '\n';
-		}
-	}
-	return b;
+  if (b.length === 1) {
+    // if the remaining character is a whitespace
+    if (/[ \t\n]*$/.test(b)) {
+      return '';
+    } else {
+      return b + '\n';
+    }
+  }
+  return b;
 }
 
 async function getChangedFilesPaths(pull_request, octokit, owner, repo) {
-	const { data: pullRequestDiff } = await octokit.pulls.get({
-		owner,
-		repo,
-		pull_number: pull_request.number,
-		mediaType: {
-			format: 'diff'
-		}
-	});
+  const { data: pullRequestDiff } = await octokit.pulls.get({
+    owner,
+    repo,
+    pull_number: pull_request.number,
+    mediaType: {
+      format: 'diff'
+    }
+  });
 
-	const parsedDiff = gitDiffParser(pullRequestDiff);
+  const parsedDiff = gitDiffParser(pullRequestDiff);
 
-	const changedFilePaths = parsedDiff.map((e) => {
-		return e['newPath'].replace('b/', '');
-	});
+  const changedFilePaths = parsedDiff.map((e) => {
+    return e['newPath'].replace('b/', '');
+  });
 
-	return changedFilePaths;
+  return changedFilePaths;
 }
 
 async function run() {
-	const token = core.getInput('GH_TOKEN');
-	let ignorePaths = core.getInput('IGNORE_PATHS');
-	if (!ignorePaths) {
-		ignorePaths = [];
-	} else {
-		ignorePaths = ignorePaths.split(' ');
-		ignorePaths = ignorePaths.map((e) => {
-			if (e.slice(-1) === '/') {
-				return e + '.*';
-			} else {
-				return e;
-			}
-		});
-	}
+  const token = core.getInput('GH_TOKEN');
+  let ignorePaths = core.getInput('IGNORE_PATHS');
+  if (!ignorePaths) {
+    ignorePaths = [];
+  } else {
+    ignorePaths = ignorePaths.split(' ');
+  }
 
-	core.info('ignorePaths' + JSON.stringify(ignorePaths));
+  core.info('ignorePaths' + JSON.stringify(ignorePaths));
 
-	let branch;
-	if (github.context.eventName == 'pull_request') {
-		branch = github.context.payload.pull_request.head.ref;
-	} else {
-		branch = github.context.ref.replace('refs/heads/', '');
-	}
+  let branch;
+  if (github.context.eventName == 'pull_request') {
+    branch = github.context.payload.pull_request.head.ref;
+  } else {
+    branch = github.context.ref.replace('refs/heads/', '');
+  }
 
-	const git = simpleGit();
+  const git = simpleGit();
 
-	const octokit = github.getOctokit(token);
-	const { context = {} } = github;
-	const { pull_request } = context.payload;
+  const octokit = github.getOctokit(token);
+  const { context = {} } = github;
+  const { pull_request } = context.payload;
 
-	const owner = env.GITHUB_REPOSITORY.split('/')[0];
-	const repo = env.GITHUB_REPOSITORY.split('/')[1];
+  const owner = env.GITHUB_REPOSITORY.split('/')[0];
+  const repo = env.GITHUB_REPOSITORY.split('/')[1];
 
-	const changedFilePaths = await getChangedFilesPaths(
-		pull_request,
-		octokit,
-		owner,
-		repo
-	);
+  const changedFilePaths = await getChangedFilesPaths(
+    pull_request,
+    octokit,
+    owner,
+    repo
+  );
 
-	core.info('changedFilePaths ' + JSON.stringify(changedFilePaths));
+  core.info('changedFilePaths ' + JSON.stringify(changedFilePaths));
 
-	// Removec files matching ignore paths regex
-	let filesToCheck = changedFilePaths.map((e) => {
-		for (let i = 0; i < ignorePaths.length; i++) {
-			if (matchExact(ignorePaths[i], e)) {
-				return null;
-			}
-		}
-		return e;
-	});
+  // Removec files matching ignore paths regex
+  let filesToCheck = changedFilePaths.map((e) => {
+    for (let i = 0; i < ignorePaths.length; i++) {
+      if (matchExact(ignorePaths[i], e)) {
+        return null;
+      }
+    }
+    return e;
+  });
 
-	core.info('filesToCheck ' + JSON.stringify(filesToCheck));
+  core.info('filesToCheck ' + JSON.stringify(filesToCheck));
 
-	// Perform EOF newline check
-	for (let i = 0; i < filesToCheck.length; i++) {
-		if (filesToCheck[i] !== null) {
-			let data = fs.readFileSync(filesToCheck[i], {
-				encoding: 'utf8',
-				flag: 'r'
-			});
-			data = fixNewLineEOF(data);
-			fs.writeFileSync(filesToCheck[i], data, 'utf8');
-		}
-	}
+  // Store modified files
 
-	// Generate DIff and commit changes
-	const diff = await exec.exec('git', ['diff', '--quiet'], {
-		ignoreReturnCode: true
-	});
+  let filesToCommit = [];
 
-	core.info(JSON.stringify(diff));
+  // Perform EOF newline check
+  for (let i = 0; i < filesToCheck.length; i++) {
+    if (filesToCheck[i] !== null) {
+      let data = fs.readFileSync(filesToCheck[i], {
+        encoding: 'utf8',
+        flag: 'r'
+      });
+      fixedData = fixNewLineEOF(data);
+      if (data !== fixedData) {
+        filesToCommit.push(filesToCheck[i]);
+      }
+      fs.writeFileSync(filesToCheck[i], fixedData, 'utf8');
+    }
+  }
 
-	if (diff) {
-		await core.group('push changes', async () => {
-			await git.addConfig(
-				'user.email',
-				`${env.GITHUB_ACTOR}@users.noreply.github.com`
-			);
-			await git.addConfig('user.name', env.GITHUB_ACTOR);
-			await git.add('./');
-			await git.commit('Fixed Trailing Whitespaces and EOF Newline');
-			await git.push('repo', branch);
-		});
-	} else {
-		console.log('No changes to make');
-	}
+  // Log Changed files
+  core.info('filesToCommit: ' + JSON.stringify(filesToCommit));
+
+  // Generate DIff and commit changes
+  const diff = await exec.exec('git', ['diff', '--quiet'], {
+    ignoreReturnCode: true
+  });
+
+  core.info(diff);
+
+  if (diff) {
+    await core.group('push changes', async () => {
+      await git.addConfig(
+        'user.email',
+        `${env.GITHUB_ACTOR}@users.noreply.github.com`
+      );
+      await git.addConfig('user.name', env.GITHUB_ACTOR);
+      await git.add(filesToCommit);
+      await git.commit('Fixed Trailing Whitespaces and EOF Newline');
+      await git.push('repo', branch);
+    });
+  } else {
+    console.log('No changes to make');
+  }
 }
 
 run();
@@ -4371,7 +4374,7 @@ const Endpoints = {
         previews: ["squirrel-girl"]
       }
     }, {
-      deprecated: "octokit.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
+      deprecated: "octokit.rest.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
     }],
     listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", {
       mediaType: {
@@ -4438,7 +4441,7 @@ const Endpoints = {
     createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
     createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
     createForAuthenticatedUser: ["POST /user/repos"],
-    createFork: ["POST /repos/{owner}/{repo}/forks{?org,organization}"],
+    createFork: ["POST /repos/{owner}/{repo}/forks"],
     createInOrg: ["POST /orgs/{org}/repos"],
     createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
     createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
@@ -4748,7 +4751,7 @@ const Endpoints = {
   }
 };
 
-const VERSION = "4.15.0";
+const VERSION = "4.15.1";
 
 function endpointsToMethods(octokit, endpointsMap) {
   const newMethods = {};

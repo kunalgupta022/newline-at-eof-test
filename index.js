@@ -108,11 +108,11 @@ async function run() {
         encoding: 'utf8',
         flag: 'r'
       });
-      core.log(filesToCheck[i]);
+      core.info(filesToCheck[i]);
       const fixedData = fixNewLineEOF(data);
       if (data !== fixedData) {
         filesToCommit.push(filesToCheck[i]);
-        core.log(filesToCommit);
+        core.info(filesToCommit);
         fs.writeFileSync(filesToCheck[i], fixedData, 'utf8');
       }
     }

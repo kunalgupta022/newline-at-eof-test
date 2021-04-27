@@ -4,12 +4,14 @@ on: [pull_request]
 jobs:
   build-package:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - name: Build node js module
-        uses: gps/ncc-gha@master
+        uses: kunalgupta022/ncc-gha@patch-1
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORE_PATHS: ${{ 'dist/.* package-lock.json' }}

@@ -7,10 +7,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build node js module
-        uses: kunalgupta022/ncc-gha@patch-1
-        with:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check EOF newlines
         uses: gps/newline-at-eof@kunal/ch1768-add-action-files
         with:

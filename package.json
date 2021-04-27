@@ -1,23 +1,24 @@
 {
-  "name": "determine-next-version",
+  "name": "newline-at-eof-test",
   "version": "1.0.0",
   "description": "A GitHub Action that parses git tags that start with v and determines the next version",
   "main": "index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gps/determine-next-version.git"
+    "url": "git+https://github.com/gps/newline-at-eof-test.git"
   },
   "keywords": [],
   "author": "",
   "bugs": {
-    "url": "https://github.com/gps/determine-next-version/issues"
+    "url": "https://github.com/gps/newline-at-eof-test/issues"
   },
-  "homepage": "https://github.com/gps/determine-next-version#readme",
+  "homepage": "https://github.com/gps/newline-at-eof-test#readme",
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@actions/exec": "^1.0.4",
     "@actions/github": "^4.0.0",
+    "@vercel/ncc": "^0.27.0",
     "fs-extra": "^9.1.0",
     "simple-git": "^2.38.0",
     "what-the-diff": "^0.6.0"

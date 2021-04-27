@@ -11,7 +11,8 @@ jobs:
         uses: kunalgupta022/ncc-gha@patch-1
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./
+      - name: Check EOF newlines
+        uses: gps/newline-at-eof@ch1768-add-action-files
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PATHS: ${{ 'dist/.* package-lock.json' }}

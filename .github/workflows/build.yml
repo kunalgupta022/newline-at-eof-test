@@ -12,7 +12,7 @@ jobs:
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check EOF newlines
-        uses: gps/newline-at-eof@ch1768-add-action-files
+        uses: gps/newline-at-eof@kunal/ch1768-add-action-files
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PATHS: ${{ 'dist/.* package-lock.json' }}

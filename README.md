@@ -1,6 +1,1 @@
 # newline-at-eof Test
-
-
-
-
-

@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Check EOF newlines
-        uses: gps/newline-at-eof@kunal/ch1768-add-action-files
+        uses: gps/newline-at-eof@kunal/log-ignored-files
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_FILE_PATTERNS: |

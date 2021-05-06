@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Check EOF newlines
-        uses: gps/newline-at-eof@kunal/fix-changedFilePath-filter-regex-patters
+        uses: gps/newline-at-eof@kunal/fix-changedFilePaths-filter-regex-patters
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_FILE_PATTERNS: |

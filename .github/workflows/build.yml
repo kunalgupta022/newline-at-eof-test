@@ -7,8 +7,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
       - name: Check EOF newlines
-        uses: gps/newline-at-eof@kunal/ch1768-add-action-files
+        uses: gps/newline-at-eof@master
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_FILE_PATTERNS: |
@@ -16,4 +18,8 @@ jobs:
               "dist/.*",
               "package-lock.json"
             ]
-          COMMIT_MESSAGE: 'Fixed EOF Newline'
+          COMMIT_AND_PUSH_CHANGES: false
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Format code

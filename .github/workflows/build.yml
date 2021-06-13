@@ -10,7 +10,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
       - name: Check EOF newlines
-        uses: gps/newline-at-eof
+        uses: gps/newline-at-eof@master
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_FILE_PATTERNS: |

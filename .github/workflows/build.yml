@@ -10,7 +10,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
       - name: Check EOF newlines
-        uses: gps/newline-at-eof@kunal/ch2343-add-block-commit-option
+        uses: gps/newline-at-eof
         with:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_FILE_PATTERNS: |
@@ -23,4 +23,3 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Format code
-          
